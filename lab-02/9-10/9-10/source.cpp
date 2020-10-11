@@ -40,24 +40,32 @@ int suma(int *tab, const int n)
 
 double srednia(int *tab, const int n)
 {
-	int s = 0;
-	for (int i = 0; i < n; ++i) {
-		s = s + tab[i];
-	}
-	return s / n;
+	double srednia = 1.0*suma(tab, n) / n;
+	return srednia;
 }
 
-int min(int *tab, const int i)
+int min(int *tab, const int n)
 {
-	int min = numeric_limits<int>().max();
-	if (tab[i] < min) min = tab[i];
+	
+
+	int min = numeric_limits<int>::max();
+	for (int i = 0; i < n; i++)
+	{
+		if (tab[i] < min) min = tab[i];
+	}
 	return min;
 }
 
-int max(int *tab, const int i)
+int max(int *tab, const int n)
 {
-	int max = numeric_limits<int>().min();
-	if (tab[i] > max) max = tab[i];
+	
+	int max = numeric_limits<int>::min();
+	for (int i = 0; i < n; i++)
+	{
+		if (tab[i] > max) max = tab[i];
+	}
+	
+	
 	return max;
 }
 
@@ -69,8 +77,8 @@ int main()
 	getdata(tablica, n);
 	suma(tablica, n);
 	showdata(tablica, n);
-	cout<<suma(tablica, n);
-	cout << srednia(tablica, n);
-	cout<<max(tablica, n);
-	cout<<min(tablica, n);
+	cout<<"Suma: "<<suma(tablica, n)<<endl;
+	cout <<"Srednia: "<< srednia(tablica, n)<<endl;
+	cout<<"Max: "<<max(tablica, n)<<endl;
+	cout<<"Min: "<<min(tablica, n);
 }
