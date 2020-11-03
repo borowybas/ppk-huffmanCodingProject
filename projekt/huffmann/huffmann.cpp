@@ -83,6 +83,35 @@ void deletelist(Node*& root) {
 		root = pomocniczy;
 	}
 }
+void swap(Node* node1, Node* node2) {
+	int tlicznik = node1->licznik;
+	node1->licznik = node2->licznik;
+	node2->licznik = tlicznik;
+
+	int tznak = node1->znak;
+	node1->znak = node2->znak;
+	node2->znak = tznak;
+}
+void sort(Node*&root) {
+	Node* temp;
+	temp = root;
+	int flag;
+	do {
+		flag = 1;
+		temp = root;
+
+		while (temp->next) {
+
+			if (temp->licznik > temp->next->licznik) {
+
+				swap(temp, temp->next);
+				flag = 0;
+			}
+			temp = temp->next;
+		}
+	} while (!flag);
+}
+
 
 int main()
 {
@@ -92,6 +121,7 @@ int main()
 	
 	Node* root;
 	count(plik, root);
+	sort(root);
 	deletelist(root);
 
     std::cout << "\nHello World!\n";
