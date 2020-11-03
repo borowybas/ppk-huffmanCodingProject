@@ -34,27 +34,6 @@ struct Node
 	int licznik;
 };
 
-void listaznakow(string& plik, vector<Node*> vec) {	
-
-	for (int i = 0; i < plik.size(); i++) {
-		Node* p = vec[0];
-		for (int j = 0; j<vec.size(); j++) {
-			if (plik[i] == p->znak) {
-				p->licznik++; break;
-			}
-			else{
-				Node  n = { NULL, NULL, NULL, plik[i], 1 };
-				Node* ptr = &n;
-				vec.push_back(ptr);
-			}
-			cout << p->znak << p->licznik;
-			p++;
-		}
-	}
-	for (int i = 0; i < vec.size(); i++) {
-	}
-}
-
 void count(string& plik, Node* &root) {
 	
 	Node* temp;
@@ -96,43 +75,11 @@ void count(string& plik, Node* &root) {
 }
 
 
-/*struct node {
-	string s;
-	node* left;
-	node* right;
-};
-
-
-
-void add(node*& root, const string& value) {
-	if (root == nullptr) root = new node{ value, nullptr, nullptr };
-	else {
-		if (value < root->s) add(root->left, value);
-		if (value > root->s) add(root->right, value);
-	}
-}*/
-
 int main()
 {
-	
-
-	/*node* _root = nullptr;
-	add(_root, "Katarzyna");
-	add(_root, "Anna");
-	add(_root, "Kinga");
-
-	delete _root;
-
-
-	node root;
-		*/
-
-
 	int n;
 	string plik;
 	read(plik, n, "plik.txt");
-	//vector<Node*> vec;
-	//listaznakow(plik, vec);
 	
 	Node* root;
 	count(plik, root);
