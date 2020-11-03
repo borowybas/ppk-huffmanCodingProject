@@ -74,6 +74,15 @@ void count(string& plik, Node* &root) {
 	}
 }
 
+void deletelist(Node*& root) {
+	Node* pomocniczy;
+	pomocniczy = root;
+	while (pomocniczy != NULL) {
+		pomocniczy = root->next;
+		delete root;
+		root = pomocniczy;
+	}
+}
 
 int main()
 {
@@ -83,6 +92,7 @@ int main()
 	
 	Node* root;
 	count(plik, root);
+	deletelist(root);
 
     std::cout << "\nHello World!\n";
 }
