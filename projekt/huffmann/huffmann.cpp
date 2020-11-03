@@ -5,7 +5,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include<cstdlib>
+#include <cstdlib>
+#include <map>
 
 #include "funkcje.h"
 
@@ -18,38 +19,124 @@ void read(string &plik, int& n, const string& name) {
 	int i = 0;
 	while (stream >> litera) {
 		plik.push_back(litera);
-		cout << litera << endl;
+		
 		++i;
 	}
 	n = i;
 	stream.close();
 }
-void licz(const string& plik){
-	int licze[123] = {};
+struct Node
+{
+	Node* next;
+	Node* left;
+	Node* right;
+	char znak;
+	int licznik;
+};
 
-	int i = 0;
-	while (plik[i]) {
-		++licze[plik[i]];
-		++i;
+void listaznakow(string& plik, vector<Node*> vec) {	
+
+	for (int i = 0; i < plik.size(); i++) {
+		Node* p = vec[0];
+		for (int j = 0; j<vec.size(); j++) {
+			if (plik[i] == p->znak) {
+				p->licznik++; break;
+			}
+			else{
+				Node  n = { NULL, NULL, NULL, plik[i], 1 };
+				Node* ptr = &n;
+				vec.push_back(ptr);
+			}
+			cout << p->znak << p->licznik;
+			p++;
+		}
 	}
-	for (int i = 97; i < 123; i++) //wypisanie wyst¹pieñ ma³ych liter ASCII - 97-122
-		if (licze[i] < 0) //lub if(zlicz[i])
-			cout << (char)i << " - " << licze[i] << endl;
-
-	for (int i = 65; i < 91; i++) //wypisanie wyst¹pieñ du¿ych liter ASCII - 65-90
-		if (licze[i] < 0) //lub if(zlicz[i])
-			cout << (char)i << " - " << licze[i] << endl;
+	for (int i = 0; i < vec.size(); i++) {
+	}
 }
+
+void count(string& plik, Node* &root) {
+	
+	Node* temp;
+	temp = NULL;
+	root = NULL;
+	int flag = 0;
+
+	for (int i = 0; i < plik.size(); i++) {
+		temp = root;
+		while (temp != NULL) {
+			if (plik[i] == temp->znak) {
+				temp->licznik += 1;
+				flag = 1;
+				break;
+			}
+			else {
+				temp = temp->next;
+				flag = 0;
+			}
+		}
+		if (!flag) {
+			temp = new Node;
+			temp->next = NULL;
+			temp->left = NULL;
+			temp->right = NULL;
+			temp->znak = plik[i];
+			temp->licznik = 1;
+			if (i == 0) root = temp;
+			else if (i != 0) {
+				Node* lastel;
+				lastel = root;
+				while (lastel->next != NULL) {
+					lastel = lastel->next;
+					}
+				lastel->next = temp;
+			}
+		}
+	}
+}
+
+
+/*struct node {
+	string s;
+	node* left;
+	node* right;
+};
+
+
+
+void add(node*& root, const string& value) {
+	if (root == nullptr) root = new node{ value, nullptr, nullptr };
+	else {
+		if (value < root->s) add(root->left, value);
+		if (value > root->s) add(root->right, value);
+	}
+}*/
 
 int main()
 {
+	
+
+	/*node* _root = nullptr;
+	add(_root, "Katarzyna");
+	add(_root, "Anna");
+	add(_root, "Kinga");
+
+	delete _root;
+
+
+	node root;
+		*/
+
+
 	int n;
 	string plik;
 	read(plik, n, "plik.txt");
-	for (int i = 0; i < plik.size(); i++) {
-		cout << plik[i];
-	}
-	licz(plik);
+	//vector<Node*> vec;
+	//listaznakow(plik, vec);
+	
+	Node* root;
+	count(plik, root);
+
     std::cout << "\nHello World!\n";
 }
 /*Napisaæ program do kompresji plików metod¹ Huffmanna.Program uruchamiany jest z linii poleceñ z wykorzystaniem nastêpuj¹cych prze³¹czników:
