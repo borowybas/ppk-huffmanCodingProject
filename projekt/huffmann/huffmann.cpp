@@ -25,6 +25,7 @@ void read(string &plik, int& n, const string& name) {
 	n = i;
 	stream.close();
 }
+
 struct Node
 {
 	Node* next;
@@ -112,17 +113,130 @@ void sort(Node*&root) {
 	} while (!flag);
 }
 
+void createTree(Node** root) {
+	Node* temp_root,* temp_next, *newnode, *begin, *temp_begin;
+
+	temp_root = *root;
+	temp_next = temp_root->next;
+
+	while (temp_next != NULL) {
+
+		begin = temp_next->next;
+		newnode = new Node;
+		newnode->znak = NULL;
+		newnode->right = temp_next;
+		newnode->left = temp_root;
+		newnode->licznik = temp_root->licznik + temp_next->licznik;
+		//wstawiæ do listy
+		if (!begin || newnode->licznik <= begin->licznik) {
+			newnode->next = begin;
+			begin = newnode;
+			temp_begin = begin;
+		}
+		else {
+			//begin = temp_next->next;
+			temp_begin = begin;
+			while ((begin->licznik < newnode->licznik) && begin != NULL) {
+				begin = begin->next;
+			}
+			newnode->next = begin->next;
+			begin->next = newnode;
+		}
+		temp_root = temp_begin;
+		temp_next = temp_begin->next;
+		if (temp_begin->next == NULL) {
+			*root = temp_begin;
+		}
+	}
+}
+
+void DFSRelease(Node* v)
+{
+	if (v)
+	{
+		DFSRelease(v->left);          // usuwamy lewe poddrzewo
+		DFSRelease(v->right);         // usuwamy prawe poddrzewo
+		delete v;                     // usuwamy sam wêze³
+	}
+}
+
+bool codeletter(char c, Node* root, string tempcode, string& code) {
+	if (root != NULL) {
+		codeletter(c, root->left, tempcode + "0", code);
+		if(root->znak == c){
+			code = tempcode;
+			return true;
+		}
+		codeletter(c, root->right, tempcode + "1", code);
+		if (root->znak == c) {
+			code = tempcode;
+			return true;
+		}
+	}
+}
+
+string codetext(string plik, Node* root) {
+	string code = "";
+
+	for (int i = 0; i < plik.size(); i++) {
+
+		string code01 = "";
+		codeletter(plik[i], root, "", code01);
+		//code += plik[i];
+		code += code01;
+	}
+	return code;
+}
+
+string uniq(string plik, Node* root) {
+	string unique = "";
+	for (int i = 0; i < plik.size(); i++) {
+		size_t found = unique.find(plik[i]);
+		if (found == std::string::npos) {
+			unique += plik[i];
+		}
+	}
+	string lettandcode = "";
+	for(int i = 0; i < unique.size(); i++){
+		string code01 = "";
+		
+		codeletter(unique[i], root, "", code01);
+		lettandcode += unique[i];
+		lettandcode += "	";
+		lettandcode += code01;
+		lettandcode += "\n";
+	}
+	return lettandcode;
+}
+
+void save(string code, const string& name) {
+
+	ofstream stream(name.c_str());
+	stream << code << endl;
+	stream.close();
+}
+
+void dekompresja(string code, Node* root) {
+
+
+}
 
 int main()
 {
 	int n;
 	string plik;
+	string code="";
 	read(plik, n, "plik.txt");
 	
 	Node* root;
 	count(plik, root);
 	sort(root);
-	deletelist(root);
+	//deletelist(root);
+	createTree(&root);
+	cout<< plik << " " << codetext(plik,root) << endl;
+	save(uniq(plik, root), "lettandcode.txt");
+	dekompresja(codetext(plik, root), root);
+	DFSRelease(root);
 
     std::cout << "\nHello World!\n";
 }
