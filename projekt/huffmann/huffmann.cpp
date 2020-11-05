@@ -6,23 +6,20 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
-#include <map>
+#include <sstream>
 
 #include "funkcje.h"
 
 using namespace std;
 
 //drzewo binarne
-void read(string &plik, int& n, const string& name) {
+void read(string &plik, const string& name) {
 	ifstream stream(name.c_str());
 	char litera;
 	int i = 0;
 	while (stream >> litera) {
 		plik.push_back(litera);
-		
-		++i;
 	}
-	n = i;
 	stream.close();
 }
 
@@ -35,7 +32,7 @@ struct Node
 	int licznik;
 };
 
-void count(string& plik, Node* &root) {
+void list(string& plik, Node* &root) {
 	
 	Node* temp;
 	temp = NULL;
@@ -191,7 +188,7 @@ string codetext(string plik, Node* root) {
 string uniq(string plik, Node* root) {
 	string unique = "";
 	for (int i = 0; i < plik.size(); i++) {
-		size_t found = unique.find(plik[i]);
+		size_t found = unique.find(plik[i]);//////char??
 		if (found == std::string::npos) {
 			unique += plik[i];
 		}
@@ -201,10 +198,10 @@ string uniq(string plik, Node* root) {
 		string code01 = "";
 		
 		codeletter(unique[i], root, "", code01);
-		lettandcode += unique[i];
-		lettandcode += "	";
-		lettandcode += code01;
-		lettandcode += "\n";
+		lettandcode = lettandcode +unique[i]+code01+ "\n";
+		//lettandcode += "	";
+		//lettandcode += code01;
+		//lettandcode += "\n";
 	}
 	return lettandcode;
 }
@@ -216,26 +213,101 @@ void save(string code, const string& name) {
 	stream.close();
 }
 
-void dekompresja(string code, Node* root) {
+string readfile(string code, const string& name) {
+	//szukaj
+	/*vector<pair<char, string>> letter;
+
+	ifstream stream(name.c_str());
+
+	string line;
+
+	if (stream) {
+		string line;
+		while (stream >> line) {
+			char litera;
+			getline(stream, line);
+			//litera = line[0];
+			//cout << line[0];
+			string liczba = "";
+			for (int i = 1; i < line.length(); i++) {
+				liczba.push_back(line[i]);
+			}
+
+			pair<char, string> zestaw(line[0], liczba);
+			letter.push_back(zestaw);
+
+		}
+	}
+
+	for (int i = 0; i < letter.size(); i++)
+	{
+		cout << "\n" << letter[i].first << " " << letter[i].second;
+	}
+
+	stream.close();*/
+	vector<char> letters;
+	vector<string> codes;
 
 
+	fstream file;
+	file.open(name, ios::in);
+	if (file.good() == true) {
+		string line;
+		do {
+			getline(file, line);
+			letters.push_back(line[0]);
+			codes.push_back("");
+			for (int i = 1; i < line.length(); i++)
+				codes.back() += line[i];
+
+		} while (line != "\0");
+	}
+	else cout << "Brak";
+
+	for (int i = 0; i < letters.size(); i++) {
+		cout << letters[i] << codes[i];
+	}
+	file.close();
+
+	string returntext = "";
+	string codedletters = "";
+	for (int i = 0; i < code.size(); i++) {
+		codedletters += code[i];
+
+		for (int j = 0; j < codes.size(); j++) {
+
+			if (codedletters == codes[j]) {
+				returntext += letters[j];
+				codedletters = "";
+				break;
+			}
+		}
+	}
+	return returntext;
 }
 
+void decompress() {
+
+}
 int main()
 {
-	int n;
+	char what;
+	cout<<" -i plik wejœciowy- o plik wyjœciowy- t tryb : k –kompresja, d –dekompresja- s plik ze s³ownikiem";
+	cin >> what;
+	
 	string plik;
 	string code="";
-	read(plik, n, "plik.txt");
+	read(plik, "plik.txt");
 	
 	Node* root;
-	count(plik, root);
+	list(plik, root);
 	sort(root);
 	//deletelist(root);
 	createTree(&root);
 	cout<< plik << " " << codetext(plik,root) << endl;
 	save(uniq(plik, root), "lettandcode.txt");
-	dekompresja(codetext(plik, root), root);
+	cout<<readfile(codetext(plik, root), "lettandcode.txt");
+
 	DFSRelease(root);
 
     std::cout << "\nHello World!\n";
