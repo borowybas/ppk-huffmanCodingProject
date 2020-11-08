@@ -11,9 +11,10 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	string inputname = "plik.txt";
-	string outputname = "code.txt";
-	string dictionary = "letterandcode.txt";
+	string outputname = "coded.txt";
+	string dictionary = "dictionary.txt";
 	char mode = NULL;
+
 	if (argc == 1 || argc != 9 || argc == 0) {
 		cout << "-i plik wejsciowy\n-o plik wyjsciowy\n-t tryb : k –kompresja, d –dekompresja\n-s plik ze slownikiem\n";
 	}
@@ -43,30 +44,15 @@ int main(int argc, char* argv[])
 			save(createDictionary(plik, root), dictionary, output);
 			writebin(output, outputname);
 			deletetree(root); 
-			cout << "compressing statuss: finished";
+			cout << "compressing status: finished";
 			break; }
 		case 'd': {string text = readbin(outputname);
 			string decode = readfile(text, dictionary);
-			cout << decode;
+			cout << decode<<endl<<"decompressing status: finished";
 			 break; }
 		default:cout << "Nie ma takiego trybu";
 			break;
 		}
 	}
-    std::cout << "\nHello World!\n";
 	return 0;
 }
-/*Napisaæ program do kompresji plików metod¹ Huffmanna.Program uruchamiany jest z linii poleceñ z wykorzystaniem nastêpuj¹cych prze³¹czników:
--i plik wejœciowy
--o plik wyjœciowy
--t tryb: k –kompresja, d –dekompresja
--s plik ze s³ownikiem (tworzonym w czasie kompresji, u¿ywanym w czasie dekompresji)*/
-
-/*1.Celem projektu jest nabycie umiejêtnoœci korzystania z dynamicznych struktur danych (np. listy, drzewa, stosy, kolejki itd.). 
-Warunkiem zaliczenia programu jest u¿ycie tych struktur.
-2.U¿ycie bibliotecznych kontenerów biblioteki stl jest dozwolone (np. std::vector, std::list itd.).
-3.Mo¿na u¿ywaæ typu std::string do przeprowadzenia dowolnej operacji na danych typu tekstowego.
-4.Przed implementacj¹ konieczna jest akceptacja struktury danych przez prowadz¹cego zajêcia.
-5.Program powinien byæ podzielony na pliki z deklaracjami (*.h) i definicjami (*.cpp).
-6.Uruchomienie programu bez parametrów powoduje wypisanie krótkiej informacji o tym, jak u¿yæ programu.
-7.Wszystkie funkcje musz¹ byæ skomentowane w doxygenie*/

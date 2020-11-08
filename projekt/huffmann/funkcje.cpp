@@ -230,9 +230,6 @@ string readbin(const string& name) {
 			}
 		}
 	stream.close();
-//	int len = text.length();
-//	cout << len << endl;
-//	cout << text << endl;
 	return text;
 }
 

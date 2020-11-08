@@ -11,11 +11,11 @@ using namespace std;
 
 /**Funkcja wczytuje dane z pliku tekstowego, zapisuje je do zmiennej typu string
 @param name nazwa pliku
-@param plik napis do kórego zosataj¹ zapisane dane z pliku
+@param plik napis do ktorego zostaja zapisane dane z pliku
 */
 void read(string& plik, const string& name);
 
-/**Struktura przechowuj¹ca znak, liczbe jego wyst¹pien, wskaznik do nastepnego elementu, wskaznik do prawego i lewego potomka
+/**Struktura przechowujaca znak, liczbe jego wyst¹pien, wskaznik do nastepnego elementu, wskaznik do prawego i lewego potomka
 */
 struct Node
 {
@@ -26,52 +26,52 @@ struct Node
 	int licznik;
 };
 
-/**Funkcja liczy iloœæ wyst¹pieñ danego znaku, oraz tworzy listê jednostronn¹
+/**Funkcja liczy ilosc wyst¹pien danego znaku, oraz tworzy liste jednostronna
 @param plik napis
-@param root pocz¹tkowy wêze³ listy
+@param root poczatkowy weze³ listy
 */
 void list(string& plik, Node*& root);
 
-/**Funkcja zamieniaj¹ca dane dwóch wêz³ów
+/**Funkcja zamieniajaca dane dwoch wezlow
 @param node1
 @param node2
 */
 void swap(Node* node1, Node* node2);
 
-/**Funkcja, która sortuje listê jednokierunkow¹
-@param root pocz¹tkowy weze³ listy
+/**Funkcja, ktora sortuje liste jednokierunkowa
+@param root poczatkowy wezel listy
 */
 void sort(Node*& root);
 
-/**Funkcja tworzy drzewo binarne na podstawie listy jednokierunkowej
-@param root wskaŸnik do pierwszego elementu listy
+/**Funkcja tworzy drzewo binarne na podstawie listy
+@param root wskaznik do pierwszego elementu listy
 */
 void createTree(Node** root);
 
-/**Funkcja usuwa drzewo z wêz³ami
-@param root g³ówny wêze³
+/**Funkcja usuwa drzewo z wezlami
+@param root glowny wezel
 */
 void deletetree(Node* root);
 
 /**Funkcja przypisuje unikatowy kod dla danego znaku
-@param c znak do którego zostaje przypisany kod
-@param root pocz¹tkowy weze³ drzewa
+@param c znak do ktorego zostaje przypisany kod
+@param root poczatkowy wezel drzewa
 @param tempcode zmienna, w ktorej zapisany jest zakodowany znak w danej rekurencji
 @param code zmienna, w ktorej zapisany jest zakodowany znak
 */
 bool codeletter(char c, Node* root, string tempcode, string& code);
 
-/**Funkcja, która koduje ca³y tekst
-@param plik tekst, który zostanie zakodowany
-@param root pocz¹tkowy weze³ drzewa
-@return zakdowany ci¹g znaków
+/**Funkcja, ktora koduje ca³y tekst
+@param plik tekst, ktory zostanie zakodowany
+@param root poczatkowy wezel drzewa
+@return zakdowany ciag znakow
 */
 string codetext(string plik, Node* root);
 
-/**Funkcja wyszukuje znak i tworzy s³owniczka 
-@param plik
+/**Funkcja wyszukuje znak i tworzy slowniczek 
+@param plik tekst, ktory zostanie zakodowany
 @param root pocz¹tkowy weze³ drzewa
-@return s³owniczek
+@return slowniczek
 */
 string createDictionary(string plik, Node* root);
 
@@ -93,7 +93,7 @@ void writebin(string code, const string& name);
 */
 string readbin(const string& name);
 
-/**Funkcja odczytuje z pliku s³ownika
+/**Funkcja odczytuje z pliku slownika
 @param code
 @param name nazwa pliku
 @return rozkodowany tekst
