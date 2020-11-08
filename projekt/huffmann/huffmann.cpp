@@ -1,38 +1,60 @@
-// huffmann.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <sstream>
 #include "funkcje.h"
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
-	//char what;
-	//cout<<" -i plik wejsciowy- o plik wyjsciowy- t tryb : k –kompresja, d –dekompresja- s plik ze slownikiem";
-	//cin >> what;
-	
-	string plik;
-	string code="";
-	read(plik, "plik.txt");
-	Node* root;
-	list(plik, root);
-	sort(root);
-	//deletelist(root);
-	createTree(&root);
-	string output = codetext(plik, root);
-	cout<< plik << output << endl;
-	save(uniq(plik, root), "lettandcode.txt");
-	writeb( output , "code.txt");
-	string text = readbin("code.txt");
-	string decode = readfile(text, "lettandcode.txt");
-	cout << decode;
-	deletetree(root);
+	string inputname = "plik.txt";
+	string outputname = "code.txt";
+	string dictionary = "letterandcode.txt";
+	char mode = NULL;
+	if (argc == 1 || argc != 9 || argc == 0) {
+		cout << "-i plik wejsciowy\n-o plik wyjsciowy\n-t tryb : k –kompresja, d –dekompresja\n-s plik ze slownikiem\n";
+	}
+	else {
+		for (int i = 1; i < argc; i++) {
+			if (strcmp(argv[i], "-i") == 0 && argv[i+1] != NULL)
+				inputname = argv[i+1];
+			if (strcmp(argv[i], "-o") == 0 && argv[i + 1] != NULL)
+				outputname = argv[i + 1];
+			if (strcmp(argv[i], "-s") == 0 && argv[i + 1] != NULL)
+				dictionary = argv[i + 1];
+			if (strcmp(argv[i], "-t") == 0 && argv[i + 1] != NULL)
+				mode = *argv[i + 1];
+		}
+		switch (mode)
+		{
+		case 'k': {
+			string plik;
+			string code = "";
+			read(plik, inputname);
+			if (plik == "") { cout << "Brak danych do skompresowania"; break; }
+			Node* root;
+			list(plik, root);
+			sort(root);
+			createTree(&root);
+			string output = codetext(plik, root);
+			save(createDictionary(plik, root), dictionary, output);
+			writebin(output, outputname);
+			deletetree(root); 
+			cout << "compressing statuss: finished";
+			break; }
+		case 'd': {string text = readbin(outputname);
+			string decode = readfile(text, dictionary);
+			cout << decode;
+			 break; }
+		default:cout << "Nie ma takiego trybu";
+			break;
+		}
+	}
     std::cout << "\nHello World!\n";
+	return 0;
 }
 /*Napisaæ program do kompresji plików metod¹ Huffmanna.Program uruchamiany jest z linii poleceñ z wykorzystaniem nastêpuj¹cych prze³¹czników:
 -i plik wejœciowy

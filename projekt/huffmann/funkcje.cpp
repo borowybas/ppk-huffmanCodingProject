@@ -2,10 +2,13 @@
 
 void read(string& plik, const string& name) {
 	ifstream stream(name.c_str());
-	char litera;
 	
-	while (stream >> litera) {
-		plik.push_back(litera);
+	if(stream.is_open()){
+		string line;
+		do {
+			getline(stream, plik);
+			
+		} while (line != "\0");
 	}
 	stream.close();
 }
@@ -50,15 +53,6 @@ void list(string& plik, Node*& root) {
 	}
 }
 
-void deletelist(Node*& root) {
-	Node* pomocniczy;
-	pomocniczy = root;
-	while (pomocniczy != NULL) {
-		pomocniczy = root->next;
-		delete root;
-		root = pomocniczy;
-	}
-}
 void swap(Node* node1, Node* node2) {
 	int tlicznik = node1->licznik;
 	node1->licznik = node2->licznik;
@@ -68,6 +62,7 @@ void swap(Node* node1, Node* node2) {
 	node1->znak = node2->znak;
 	node2->znak = tznak;
 }
+
 void sort(Node*& root) {
 	Node* temp;
 	temp = root;
@@ -102,14 +97,13 @@ void createTree(Node** root) {
 		newnode->right = temp_next;
 		newnode->left = temp_root;
 		newnode->licznik = temp_root->licznik + temp_next->licznik;
-		//wstawiæ do listy
+
 		if (!begin || newnode->licznik <= begin->licznik) {
 			newnode->next = begin;
 			begin = newnode;
 			temp_begin = begin;
 		}
 		else {
-			//begin = temp_next->next;
 			temp_begin = begin;
 			while ((begin->licznik < newnode->licznik) && begin->next != NULL) {
 				begin = begin->next;
@@ -125,8 +119,7 @@ void createTree(Node** root) {
 	}
 }
 
-void deletetree(Node* root)
-{
+void deletetree(Node* root) {
 	if (root)
 	{
 		deletetree(root->left);
@@ -157,17 +150,16 @@ string codetext(string plik, Node* root) {
 
 		string code01 = "";
 		codeletter(plik[i], root, "", code01);
-		//code += plik[i];
 		code += code01;
 	}
 	return code;
 }
 
-string uniq(string plik, Node* root) {
+string createDictionary(string plik, Node* root) {
 	string unique = "";
 	 
 	for (int i = 0; i < plik.size(); i++) {
-		size_t found = unique.find(plik[i]);//////char??
+		size_t found = unique.find(plik[i]);
 		if (found == std::string::npos) {
 			unique += plik[i];
 		}
@@ -178,63 +170,19 @@ string uniq(string plik, Node* root) {
 
 		codeletter(unique[i], root, "", code01);
 		lettandcode = lettandcode + unique[i] + code01 + "\n";
-		//lettandcode += "	";
-		//lettandcode += code01;
-		//lettandcode += "\n";
 	}
 	return lettandcode;
 }
 
-void save(string code, const string& name) {
-
+void save(string code, const string& name, const string output) {
+	unsigned int length = output.length();
 	ofstream stream(name.c_str());
-	stream << code << endl;
+	stream << length<<endl;
+	stream << code;
 	stream.close();
 }
 
-string readfile(string code, const string& name) {
-	
-	vector<char> letters;
-	vector<string> codes;
-
-	fstream file;
-	file.open(name, ios::in);
-	if (file.good() == true) {
-		string line;
-		do {
-			getline(file, line);
-			letters.push_back(line[0]);
-			codes.push_back("");
-			for (int i = 1; i < line.length(); i++)
-				codes.back() += line[i];
-
-		} while (line != "\0");
-	}
-	else { cout << "Brak dostepu";}
-
-	//for (int i = 0; i < letters.size(); i++) {
-		//cout << letters[i] << codes[i];
-	//}
-	file.close();
-
-	string returntext = "";
-	string codedletters = "";
-	for (int i = 0; i < code.size(); i++) {
-		codedletters += code[i];
-
-		for (int j = 0; j < codes.size(); j++) {
-
-			if (codedletters == codes[j]) {
-				returntext += letters[j];
-				codedletters = "";
-				break;
-			}
-		}
-	}
-	return returntext;
-}
-
-void writeb(string code, const string& name) {
+void writebin(string code, const string& name) {
 	ofstream stream(name.c_str(), ios::binary);
 	uint8_t byte = 0;
 	uint8_t index = 0;
@@ -248,7 +196,8 @@ void writeb(string code, const string& name) {
 				byte = byte | temp;
 			}
 			if (index == 0 ) {
-				stream.write((const char*)&byte, sizeof byte);			}
+				stream.write((const char*)&byte, sizeof byte);
+			}
 			if ( i == code.size()-1 && index) {
 				byte = byte << (8 - index);
 				stream.write((const char*)&byte, sizeof byte);
@@ -281,8 +230,53 @@ string readbin(const string& name) {
 			}
 		}
 	stream.close();
-	int len = text.length();
-	cout << len << endl;
-	cout << text << endl;
+//	int len = text.length();
+//	cout << len << endl;
+//	cout << text << endl;
 	return text;
+}
+
+string readfile(string code, const string& name) {
+
+	vector<char> letters;
+	vector<string> codes;
+	int length = 0;
+	fstream file;
+	file.open(name, ios::in);
+	if (file.good() == true) {
+		string line;
+		int j = 0;
+		do {
+			getline(file, line);
+			if (j == 0) {
+				stringstream len(line);
+				len >> length;
+			}
+			else {
+				letters.push_back(line[0]);
+				codes.push_back("");
+				for (int i = 1; i < line.length(); i++)
+					codes.back() += line[i];
+			}
+			j++;
+		} while (line != "\0");
+	}
+	else { cout << "Brak dostepu"; }
+	file.close();
+
+	string returntext = "";
+	string codedletters = "";
+	for (int i = 0; i < length; i++) {
+		codedletters += code[i];
+
+		for (int j = 0; j < codes.size(); j++) {
+
+			if (codedletters == codes[j]) {
+				returntext += letters[j];
+				codedletters = "";
+				break;
+			}
+		}
+	}
+	return returntext;
 }
